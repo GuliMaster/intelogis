@@ -1,83 +1,52 @@
-import { Space, Table, Tag } from 'antd';
+import { Table } from 'antd';
 import s from './Routes.module.css';
+import { useDispatch } from 'react-redux';
+import { fetchRoute } from '../../../Redux/reducers/routesReducer';
 
-const Routes = () => {
+const Routes = (props) => {
+    const dispatch = useDispatch();
+
+    const selectRouteHandler = (coordinates) => {
+        dispatch(fetchRoute(coordinates));
+    };
+
     const columns = [
         {
-          title: 'Name',
-          dataIndex: 'name',
-          key: 'name',
-          render: (text) => <a>{text}</a>,
+            title: 'Маршрут',
+            dataIndex: 'route',
+            key: 'route'
         },
         {
-          title: 'Age',
-          dataIndex: 'age',
-          key: 'age',
+            title: 'Точка 1 (lat, lng)',
+            dataIndex: 'firstPoint',
+            key: 'firstPoint',
+            render: (arr) => arr.join(', ')
         },
         {
-          title: 'Address',
-          dataIndex: 'address',
-          key: 'address',
+            title: 'Точка 2 (lat, lng)',
+            dataIndex: 'secondPoint',
+            key: 'secondPoint',
+            render: (arr) => arr.join(', ')
         },
         {
-          title: 'Tags',
-          key: 'tags',
-          dataIndex: 'tags',
-          render: (_, { tags }) => (
-            <>
-              {tags.map((tag) => {
-                let color = tag.length > 5 ? 'geekblue' : 'green';
-                if (tag === 'loser') {
-                  color = 'volcano';
+            title: 'Точка 3 (lat, lng)',
+            dataIndex: 'thirdPoint',
+            key: 'thirdPoint',
+            render: (arr) => arr.join(', ')
+        },
+    ];
+
+    return (
+        <Table className={s.table} columns={columns} dataSource={props.points}
+            onRow={(record) => {
+                const coordinates = [...record.firstPoint].reverse().join(',') + ';'
+                                    + [...record.secondPoint].reverse().join(',') + ';' 
+                                    + [...record.thirdPoint].reverse().join(',');
+                return {
+                    onClick: () => selectRouteHandler(coordinates)
                 }
-                return (
-                  <Tag color={color} key={tag}>
-                    {tag.toUpperCase()}
-                  </Tag>
-                );
-              })}
-            </>
-          ),
-        },
-        {
-          title: 'Action',
-          key: 'action',
-          render: (_, record) => (
-            <Space size="middle">
-              <a>Invite {record.name}</a>
-              <a>Delete</a>
-            </Space>
-          ),
-        },
-      ];
-      
-      const data = [
-        {
-          key: '1',
-          name: 'John Brown',
-          age: 32,
-          address: 'New York No. 1 Lake Park',
-          tags: ['nice', 'developer'],
-        },
-        {
-          key: '2',
-          name: 'Jim Green',
-          age: 42,
-          address: 'London No. 1 Lake Park',
-          tags: ['loser'],
-        },
-        {
-          key: '3',
-          name: 'Joe Black',
-          age: 32,
-          address: 'Sydney No. 1 Lake Park',
-          tags: ['cool', 'teacher'],
-        },
-      ];
-      
-      return (
-        <Table className={s.table} columns={columns} dataSource={data} />
-      );
+            }} />
+    );
 }
 
 export default Routes;
