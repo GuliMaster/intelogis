@@ -1,24 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import s from './App.module.css';
+import { Layout, theme } from 'antd';
+import RouteMapContainer from './Components/RouteMap/RouteMapContainer';
 
-function App() {
+const { Header, Content, Footer } = Layout;
+
+const App = () => {
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Layout className={s.mainLayout}>
+      <Layout>
+        <Header className={s.header} style={{ background: colorBgContainer }} />
+        <Content className={s.content} style={{ background: colorBgContainer }}>
+          <RouteMapContainer />
+        </Content>
+        <Footer className={s.footer}>Intelogis ©2023 Created by DKurushin</Footer>
+      </Layout>
+    </Layout>
   );
 }
 
